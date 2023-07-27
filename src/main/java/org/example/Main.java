@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,10 +16,12 @@ public class Main {
         tx.begin();
 
         try{
-            Member insertedMember = insertMember(tx, em);
-            selectMember(tx, em, insertedMember);
-            updateMember(em, insertedMember);
-//            deleteMember(em, insertedMember);
+            List<Member> resultList = em.createQuery("select m from Member as m", Member.class)
+                    .getResultList();
+
+            for(Member member : resultList){
+                System.out.println(member);
+            }
 
             tx.commit();
         }catch (Exception e){
@@ -32,32 +35,5 @@ public class Main {
         System.out.println("Hello world!");
     }
 
-    private static Member insertMember(EntityTransaction tx, EntityManager em){
-        Member member = new Member();
-        member.setId(46L);
-        member.setName("messi");
-
-        em.persist(member);
-
-
-
-        return member;
-    }
-
-    private static void selectMember(EntityTransaction tx, EntityManager em, Member member) {
-        Member foundMember = em.find(Member.class, member.getId());
-        System.out.println(foundMember);
-    }
-
-
-    private static void updateMember(EntityManager em, Member insertedMember) {
-        insertedMember.setName("훌랄라");
-    }
-
-
-    private static void deleteMember(EntityManager em, Member insertedMember) {
-        em.remove(insertedMember);
-        System.out.println("member 삭제");
-    }
 
 }
