@@ -7,7 +7,7 @@ import javax.persistence.Persistence;
 
 public class Main {
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("IamYS");
         EntityManager em = emf.createEntityManager();
 
         // code
@@ -15,8 +15,12 @@ public class Main {
         tx.begin();
 
         try{
-            insertMember(tx, em);
+            Member insertedMember = insertMember(tx, em);
+            selectMember(tx, em, insertedMember);
+            updateMember(em, insertedMember);
+//            deleteMember(em, insertedMember);
 
+            tx.commit();
         }catch (Exception e){
             tx.rollback();
         }finally {
@@ -28,13 +32,32 @@ public class Main {
         System.out.println("Hello world!");
     }
 
-    private static void insertMember(EntityTransaction tx, EntityManager em){
+    private static Member insertMember(EntityTransaction tx, EntityManager em){
         Member member = new Member();
-        member.setId(3L);
-        member.setName("leo");
+        member.setId(46L);
+        member.setName("messi");
 
         em.persist(member);
 
-        tx.commit();
+
+
+        return member;
     }
+
+    private static void selectMember(EntityTransaction tx, EntityManager em, Member member) {
+        Member foundMember = em.find(Member.class, member.getId());
+        System.out.println(foundMember);
+    }
+
+
+    private static void updateMember(EntityManager em, Member insertedMember) {
+        insertedMember.setName("훌랄라");
+    }
+
+
+    private static void deleteMember(EntityManager em, Member insertedMember) {
+        em.remove(insertedMember);
+        System.out.println("member 삭제");
+    }
+
 }
