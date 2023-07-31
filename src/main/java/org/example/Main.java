@@ -16,15 +16,11 @@ public class Main {
 
         try{
 
-            Member member1 = em.find(Member.class, 100L);
-            Member member2 = em.find(Member.class, 100L);
+            Member member = em.find(Member.class, 100L);
+            member.setName("ZZZZZ");
 
-            System.out.println(member1);
-            System.out.println(member2);
-
-            if(member1 == member2){
-                System.out.println("is same!!!");
-            }
+//            em.persist(member); 업데이트를 위해 persist()를 호출할 필요없음.
+            System.out.println(member);
 
             tx.commit();
         }catch (Exception e){

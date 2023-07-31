@@ -1,15 +1,31 @@
 package org.example;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Member {
     @Id
     private Long id;
 
+    @Column(name = "name", unique = true, length = 20)
     private String name;
+
+    @Enumerated(EnumType.STRING) // Java의 enum을 사용하고 싶은 경우
+    private RoleType roleType;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime updatedAt;
+
+    @Lob
+    private String desc;
+
+    @Transient
+    private int temp; // 테이블에 맵핑된 컬럼이 아니라 메모리에만 두고 사용하고 싶을 때
 
     public Long getId() {
         return id;
