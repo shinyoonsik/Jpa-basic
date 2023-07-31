@@ -4,7 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,11 +15,15 @@ public class Main {
         tx.begin();
 
         try{
-            List<Member> resultList = em.createQuery("select m from Member as m", Member.class)
-                    .getResultList();
 
-            for(Member member : resultList){
-                System.out.println(member);
+            Member member1 = em.find(Member.class, 100L);
+            Member member2 = em.find(Member.class, 100L);
+
+            System.out.println(member1);
+            System.out.println(member2);
+
+            if(member1 == member2){
+                System.out.println("is same!!!");
             }
 
             tx.commit();
