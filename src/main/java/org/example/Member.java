@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Member {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", unique = true, length = 20, columnDefinition = "varchar(100) default 'EMPTY'")
@@ -15,10 +16,8 @@ public class Member {
     @Enumerated(EnumType.STRING) // Java의 enum을 사용하고 싶은 경우, EnumType.STRING은 필수, ORDINAL을 사용하면 데이터가 꼬일수 있음
     private RoleType roleType;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
 
     @Lob

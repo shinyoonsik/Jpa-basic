@@ -14,18 +14,18 @@ public class Main {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
 
-        try{
+        try {
 
-            Member member = em.find(Member.class, 100L);
-            member.setName("ZZZZZ");
-
-//            em.persist(member); 업데이트를 위해 persist()를 호출할 필요없음.
-            System.out.println(member);
+            Member member = new Member();
+            System.out.println("---------------------");
+            em.persist(member); // 이 시점에 insert SQL을 날림. tx.commit()이 아니라(IDENTITY전략을 가진 Entity가 예외적임)
+            System.out.println("member의 ID: " + member.getId());
+            System.out.println("---------------------");
 
             tx.commit();
-        }catch (Exception e){
+        } catch (Exception e) {
             tx.rollback();
-        }finally {
+        } finally {
             // entityManager가 데이터베이스 커넥션을 가지고 동작하므로 사용후에 닫아주어야 한다.
             em.close();
         }
