@@ -20,25 +20,27 @@ public class Main {
         try {
             Team team = new Team();
             team.setName("TeamB");
-            System.out.println("------before insert team");
             em.persist(team);
-            System.out.println("------after insert team");
 
             Member member = new Member();
             member.setUsername("member2");
-            member.setTeamId(team.getId());
-
-            System.out.println("-----before insert member");
+            member.setTeam(team);
             em.persist(member);
-            System.out.println("-----after insert member");
 
-            // member의 team을 가져와 처리하는 로직이 있다면
-            // 아래와 같이 id를 가져와서 find해야하는 번잡함이 있다. 객체지향스럽지 않아!
-            // member.getTeam()이 객체지향 스러움
-            Long teamId = member.getTeamId();
-            Team foundTeam = em.find(Team.class, teamId);
-            System.out.println("member의 team: " + foundTeam.getName());
+            // 1차 캐시에 저장된 값을 가져오는 것이 아니라 DB에서 직접 가져오는 쿼리를 확인하고 싶다면
+            em.flush();
+            em.clear();
 
+            // team_id를 가지고 다시 em.find()할 필요가 없다
+            Member member1 = em.find(Member.class, member.getId());
+            System.out.println(member1.getUsername());
+            System.out.println(member1.getTeam().getName());
+
+            // member.getTeamId()를 해서 teamId로 team을 다시 조회할 필요가 없다.
+            Team team1 = member1.getTeam();
+            System.out.println(team1.getName());
+
+            System.out.println(member1.getTeam() == team1);
 
             tx.commit();
         } catch (Exception e) {
