@@ -21,6 +21,9 @@ public class Main {
             Team team = new Team();
             team.setName("TeamB");
             em.persist(team);
+            Team team2 = new Team();
+            team2.setName("TeamC");
+            em.persist(team2);
 
             Member member = new Member();
             member.setUsername("member2");
@@ -41,6 +44,11 @@ public class Main {
             System.out.println(team1.getName());
 
             System.out.println(member1.getTeam() == team1);
+
+            // 멤버의 팀을 업데이트하기
+            // setTeam() => DB의 외래키값이 update됨
+            member1.setTeam(team2);
+            System.out.println(member1.getTeam().getName());
 
             tx.commit();
         } catch (Exception e) {
