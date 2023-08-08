@@ -1,12 +1,9 @@
 package org.example;
 
-import org.example.entity.Member;
-import org.example.entity.Team;
+import org.example.entity.Order;
+import org.example.entity.OrderProduct;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,37 +15,8 @@ public class Main {
         tx.begin();
 
         try {
-            Team team = new Team();
-            team.setName("TeamB");
-            em.persist(team);
-            Team team2 = new Team();
-            team2.setName("TeamC");
-            em.persist(team2);
-
-            Member member = new Member();
-            member.setUsername("member2");
-            member.setTeam(team);
-            em.persist(member);
-
-            // 1차 캐시에 저장된 값을 가져오는 것이 아니라 DB에서 직접 가져오는 쿼리를 확인하고 싶다면
-            em.flush();
-            em.clear();
-
-            // team_id를 가지고 다시 em.find()할 필요가 없다
-            Member member1 = em.find(Member.class, member.getId());
-            System.out.println(member1.getUsername());
-            System.out.println(member1.getTeam().getName());
-
-            // member.getTeamId()를 해서 teamId로 team을 다시 조회할 필요가 없다.
-            Team team1 = member1.getTeam();
-            System.out.println(team1.getName());
-
-            System.out.println(member1.getTeam() == team1);
-
-            // 멤버의 팀을 업데이트하기
-            // setTeam() => DB의 외래키값이 update됨
-            member1.setTeam(team2);
-            System.out.println(member1.getTeam().getName());
+            Order order = new Order();
+            order.addOrderProduct(new OrderProduct());
 
             tx.commit();
         } catch (Exception e) {
