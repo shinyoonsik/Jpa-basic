@@ -3,8 +3,7 @@ package org.example.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "MEMBER")
-public class Member {
+public class Locker {
 
     @Id
     @GeneratedValue
@@ -12,9 +11,8 @@ public class Member {
 
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "LOCKER_ID")
-    private Locker locker;
+    @OneToOne(mappedBy = "locker")
+    private Member member; // 이 member는 read-only이다
 
     public Long getId() {
         return id;
@@ -32,13 +30,11 @@ public class Member {
         this.name = name;
     }
 
-    public Locker getLocker() {
-        return locker;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    // 연관관계 편의 메소드
-    public void setLocker(Locker locker) {
-        this.locker = locker;
-        locker.setMember(this);
+    public Member getMember() {
+        return member;
     }
 }

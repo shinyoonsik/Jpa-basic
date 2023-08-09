@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.entity.Order;
-import org.example.entity.OrderProduct;
+import org.example.entity.Locker;
+import org.example.entity.Member;
 
 import javax.persistence.*;
 
@@ -15,8 +15,18 @@ public class Main {
         tx.begin();
 
         try {
-            Order order = new Order();
-            order.addOrderProduct(new OrderProduct());
+            Locker locker = new Locker();
+            locker.setName("myLocker");
+            em.persist(locker);
+
+            Member member = new Member();
+            member.setName("ys");
+            member.setLocker(locker);
+            em.persist(member);
+
+            Member lockerMember = locker.getMember();
+            System.out.println("my name is " + lockerMember.getName());
+
 
             tx.commit();
         } catch (Exception e) {
