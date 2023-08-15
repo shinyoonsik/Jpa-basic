@@ -1,7 +1,5 @@
 package org.example;
 
-import org.example.entity.Member;
-
 import javax.persistence.*;
 
 public class Main {

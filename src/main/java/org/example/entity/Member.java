@@ -1,21 +1,22 @@
 package org.example.entity;
 
-
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "MEMBER")
 public class Member {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String city;
+    private String street;
+    private String zipcode;
 
-    @OneToOne
-    @JoinColumn(name = "LOCKER_ID", unique = true)
-    private Locker locker;
-
-
+    // read-only, 양방향 설정
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
 }
