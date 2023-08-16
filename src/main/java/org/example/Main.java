@@ -1,6 +1,12 @@
 package org.example;
 
-import javax.persistence.*;
+
+import org.example.entity.Movie;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,7 +18,26 @@ public class Main {
         tx.begin();
 
         try {
+            Movie movie = new Movie();
+            movie.setActor("준호");
+            movie.setDirector("감독");
+            movie.setName("제목은 괴물");
+            movie.setPrice(10000);
 
+            em.persist(movie);
+
+            Movie movie2 = new Movie();
+            movie2.setActor("호호");
+            movie2.setDirector("감독2");
+            movie2.setName("제목은 괴물2");
+            movie2.setPrice(10000);
+
+            em.persist(movie2);
+
+            em.flush();
+            em.clear();
+
+            em.find(Movie.class, movie.getId());
 
             tx.commit();
         } catch (Exception e) {
