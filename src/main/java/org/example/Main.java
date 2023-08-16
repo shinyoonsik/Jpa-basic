@@ -1,6 +1,7 @@
 package org.example;
 
 
+import org.example.entity.Item;
 import org.example.entity.Movie;
 
 import javax.persistence.EntityManager;
@@ -37,7 +38,7 @@ public class Main {
             em.flush();
             em.clear();
 
-            em.find(Movie.class, movie.getId());
+            em.find(Item.class, movie.getId());
 
             tx.commit();
         } catch (Exception e) {
