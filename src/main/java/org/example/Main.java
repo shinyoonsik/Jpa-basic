@@ -1,7 +1,7 @@
 package org.example;
 
 
-import org.example.entity.Member;
+import org.example.entity.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -25,7 +25,35 @@ public class Main {
             member.setCreatedAt(LocalDateTime.now());
             member.setUpdatedBy("ys");
             member.setUpdatedAt(LocalDateTime.now());
+            System.out.println("=======before Member");
             em.persist(member);
+            System.out.println("=======after Member");
+
+            Order order = new Order();
+            order.setMember(member);
+            order.setStatus("active");
+            em.persist(order);
+
+            Delivery delivery = new Delivery();
+            delivery.setStatus("active");
+            delivery.setAddress("서울시 관악구");
+            em.persist(delivery);
+
+            order.setDelivery(delivery);
+
+            // 단일 테이블 전략
+            Book book = new Book();
+            book.setName("지식 경영법");
+            book.setIsbn("12321312");
+            book.setAuthor("정약용");
+            em.persist(book);
+
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setItem(book);
+            orderItem.setCount(1);
+            em.persist(orderItem);
 
             tx.commit();
         } catch (Exception e) {
