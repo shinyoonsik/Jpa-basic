@@ -19,41 +19,30 @@ public class Main {
         tx.begin();
 
         try {
+            Team team = new Team();
+            team.setName("리버풀");
+            em.persist(team);
+
             Member member = new Member();
-            member.setName("훌랄라");
-            member.setCreatedBy("ys");
-            member.setCreatedAt(LocalDateTime.now());
-            member.setUpdatedBy("ys");
-            member.setUpdatedAt(LocalDateTime.now());
-            System.out.println("=======before Member");
+            member.setName("yoonsik");
+            member.setTeam(team);
             em.persist(member);
-            System.out.println("=======after Member");
 
-            Order order = new Order();
-            order.setMember(member);
-            order.setStatus("active");
-            em.persist(order);
+            // 영속 컨텍스트 초기화
+            em.flush();
+            em.clear();
 
-            Delivery delivery = new Delivery();
-            delivery.setStatus("active");
-            delivery.setAddress("서울시 관악구");
-            em.persist(delivery);
+            Member refMember = em.getReference(Member.class, member.getId());
+            System.out.println("refMember =====================");
+            System.out.println("refMember: " + refMember.getClass());
+            System.out.println(refMember.getId());
+            System.out.println(refMember.getName());  // 실제로 데이터를 사용할 때, DB를 조회한다
 
-            order.setDelivery(delivery);
-
-            // 단일 테이블 전략
-            Book book = new Book();
-            book.setName("지식 경영법");
-            book.setIsbn("12321312");
-            book.setAuthor("정약용");
-            em.persist(book);
-
-
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setItem(book);
-            orderItem.setCount(1);
-            em.persist(orderItem);
+            // member를 가지고 오면서 team을 조인해서 가져온다
+//            Member foundMember = em.find(Member.class, member.getId());
+//            System.out.println("foundMember ===================");
+//            System.out.println(foundMember.getId());
+//            System.out.println(foundMember.getName());
 
             tx.commit();
         } catch (Exception e) {
@@ -63,9 +52,5 @@ public class Main {
             em.close();
         }
         emf.close();
-
-        System.out.println("Good Luck!");
     }
-
-
 }
