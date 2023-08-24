@@ -26,6 +26,12 @@ public class Main {
 
             em.persist(parent);
 
+            em.flush();
+            em.clear();
+
+            Parent foundParent = em.find(Parent.class, parent.getId());
+            foundParent.getChildList().remove(0);
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

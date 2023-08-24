@@ -13,8 +13,7 @@ public class Parent {
 
     private String name;
 
-    // parent entity를 persist할 때, List안에 있는 모든 child를 persist하는 옵션; CascadeType.ALL
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> childList = new ArrayList<>();
 
     // 연관관계 편의 메소드
