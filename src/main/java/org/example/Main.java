@@ -3,11 +3,9 @@ package org.example;
 
 import org.example.entity.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,11 +29,18 @@ public class Main {
             em.flush();
             em.clear();
 
-            System.out.println("------");
-            Member foundMember = em.find(Member.class, member.getId()); // 즉시 로딩 -> member와 team을 조인해서 한 번에 가져옴
-            System.out.println("foundMember = " + foundMember.getTeam().getClass());
-            System.out.println("=======");
-            System.out.println("foundMember의 Team: " + foundMember.getTeam().getName());
+//            System.out.println("------");
+//            Member foundMember = em.find(Member.class, member.getId()); // 즉시 로딩 -> member와 team을 조인해서 한 번에 가져옴
+//            System.out.println("foundMember = " + foundMember.getTeam().getClass());
+//            System.out.println("=======");
+//            System.out.println("foundMember의 Team: " + fo undMember.getTeam().getName());
+
+            /**
+             * 즉시 로딩으로 설정하면 JPQL에서 N + 1문제를 야기한다
+             * JPQL은 SQL로 번역이 된다. 그런데 Member의 team이 즉시로딩이면 가져온 member만큼 team을 다시 조회해서 가져온다
+             * 즉, Member조회를 위한 쿼리(JPQL)가 1이고 이에 부수적으로 N개의 쿼리가 딸려 나갈 수 있다. => N + 1문제
+             */
+            List<Member> resultList = em.createQuery("select m from Member  m", Member.class).getResultList();
 
 
             tx.commit();
