@@ -27,15 +27,15 @@ public class Main {
             member.setName("yoonsik");
             member.setTeam(team);
             em.persist(member);
-다
+
             em.flush();
             em.clear();
 
             System.out.println("------");
-            Member foundMember = em.find(Member.class, member.getId());
+            Member foundMember = em.find(Member.class, member.getId()); // 즉시 로딩 -> member와 team을 조인해서 한 번에 가져옴
             System.out.println("foundMember = " + foundMember.getTeam().getClass());
             System.out.println("=======");
-            System.out.println("foundMember의 Team: " + foundMember.getTeam().getName()); // 사용할 때, Team을 조회한
+            System.out.println("foundMember의 Team: " + foundMember.getTeam().getName());
 
 
             tx.commit();
