@@ -27,22 +27,16 @@ public class Main {
             member.setName("yoonsik");
             member.setTeam(team);
             em.persist(member);
-
-            // 영속 컨텍스트 초기화
+다
             em.flush();
             em.clear();
 
-            Member refMember = em.getReference(Member.class, member.getId());
-            System.out.println("refMember =====================");
-            System.out.println("refMember: " + refMember.getClass());
-            System.out.println(refMember.getId());
-            System.out.println(refMember.getName());  // 실제로 데이터를 사용할 때, DB를 조회한다
+            System.out.println("------");
+            Member foundMember = em.find(Member.class, member.getId());
+            System.out.println("foundMember = " + foundMember.getTeam().getClass());
+            System.out.println("=======");
+            System.out.println("foundMember의 Team: " + foundMember.getTeam().getName()); // 사용할 때, Team을 조회한
 
-            // member를 가지고 오면서 team을 조인해서 가져온다
-//            Member foundMember = em.find(Member.class, member.getId());
-//            System.out.println("foundMember ===================");
-//            System.out.println(foundMember.getId());
-//            System.out.println(foundMember.getName());
 
             tx.commit();
         } catch (Exception e) {

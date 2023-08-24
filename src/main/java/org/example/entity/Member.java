@@ -14,7 +14,7 @@ public class Member extends BaseEntity{
     @Column(name = "MEMBER_NAME")
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // 프록시를 활용한 지연로딩
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
