@@ -17,31 +17,14 @@ public class Main {
         tx.begin();
 
         try {
-            Team team = new Team();
-            team.setName("리버풀");
-            em.persist(team);
+            Child child1 = new Child();
+            Child child2 = new Child();
 
-            Member member = new Member();
-            member.setName("yoonsik");
-            member.setTeam(team);
-            em.persist(member);
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
 
-            em.flush();
-            em.clear();
-
-//            System.out.println("------");
-//            Member foundMember = em.find(Member.class, member.getId()); // 즉시 로딩 -> member와 team을 조인해서 한 번에 가져옴
-//            System.out.println("foundMember = " + foundMember.getTeam().getClass());
-//            System.out.println("=======");
-//            System.out.println("foundMember의 Team: " + fo undMember.getTeam().getName());
-
-            /**
-             * 즉시 로딩으로 설정하면 JPQL에서 N + 1문제를 야기한다
-             * JPQL은 SQL로 번역이 된다. 그런데 Member의 team이 즉시로딩이면 가져온 member만큼 team을 다시 조회해서 가져온다
-             * 즉, Member조회를 위한 쿼리(JPQL)가 1이고 이에 부수적으로 N개의 쿼리가 딸려 나갈 수 있다. => N + 1문제
-             */
-            List<Member> resultList = em.createQuery("select m from Member  m", Member.class).getResultList();
-
+            em.persist(parent);
 
             tx.commit();
         } catch (Exception e) {
