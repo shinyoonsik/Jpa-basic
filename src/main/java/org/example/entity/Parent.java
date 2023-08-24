@@ -13,6 +13,8 @@ public class Parent {
 
     private String name;
 
+    // CascadeType.ALL + orphanRemoval=true 모두 사용한 경우
+    // child의 생명주기는 전적으로 parent 생명주기에 의존한다. 이는 자식엔티티에 대한 dao, repository가 없어도 됨을 의미한다.
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> childList = new ArrayList<>();
 

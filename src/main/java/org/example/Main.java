@@ -32,6 +32,9 @@ public class Main {
             Parent foundParent = em.find(Parent.class, parent.getId());
             foundParent.getChildList().remove(0);
 
+            // orphanRemoval = true인 경우, 부모가 삭제되면 부모의 모든 자식들도 다 지워짐
+            // em.remove(foundParent);
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
