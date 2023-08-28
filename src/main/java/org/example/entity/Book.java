@@ -1,13 +1,17 @@
 package org.example.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "BOOK")
 public class Book extends Item{
     private String author;
     private String isbn;
+
 
     public String getAuthor() {
         return author;

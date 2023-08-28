@@ -18,41 +18,34 @@ public class Main {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setName("훌랄라");
-            member.setCreatedBy("ys");
-            member.setCreatedAt(LocalDateTime.now());
-            member.setUpdatedBy("ys");
-            member.setUpdatedAt(LocalDateTime.now());
-            System.out.println("=======before Member");
-            em.persist(member);
-            System.out.println("=======after Member");
+            // Q: Order만들고 Book만들고 관계 테이블 만든후 => add해주고 order와 book 각각을 persist해주면
+            // CascadeType.ALL로 인해 orderItem도 생성된다
+            em.flush();
+            em.clear();
 
             Order order = new Order();
-            order.setMember(member);
             order.setStatus("active");
-            em.persist(order);
 
-            Delivery delivery = new Delivery();
-            delivery.setStatus("active");
-            delivery.setAddress("서울시 관악구");
-            em.persist(delivery);
-
-            order.setDelivery(delivery);
-
-            // 단일 테이블 전략
             Book book = new Book();
             book.setName("지식 경영법");
             book.setIsbn("12321312");
             book.setAuthor("정약용");
-            em.persist(book);
-
 
             OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setItem(book);
             orderItem.setCount(1);
-            em.persist(orderItem);
+
+            order.addOrderItem(orderItem);
+            book.addOrderItem(orderItem);
+
+            System.out.println("before order persist========");
+            System.out.println(order.getId());
+            System.out.println(orderItem.getId());
+            em.persist(order);
+            System.out.println("after order persist========");
+            System.out.println(order.getId());
+            System.out.println(orderItem.getId());
+
+            em.persist(book);
 
             tx.commit();
         } catch (Exception e) {
