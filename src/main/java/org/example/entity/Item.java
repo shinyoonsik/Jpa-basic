@@ -17,7 +17,7 @@ public abstract class Item extends BaseEntity{ // Item만 사용할 일이 있�
     private String name;
     private int stockQuantity;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     public void addOrderItem(OrderItem orderItem){
