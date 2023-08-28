@@ -12,7 +12,6 @@ public class Main {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("IamYS");
         EntityManager em = emf.createEntityManager();
 
-        // code
         EntityTransaction tx = em.getTransaction();
         tx.begin();
 
