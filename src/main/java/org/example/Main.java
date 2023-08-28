@@ -3,9 +3,11 @@ package org.example;
 
 import org.example.entity.*;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,23 +18,34 @@ public class Main {
         tx.begin();
 
         try {
-            Child child1 = new Child();
-            Child child2 = new Child();
-
-            Parent parent = new Parent();
-            parent.addChild(child1);
-            parent.addChild(child2);
-
-            em.persist(parent);
-
+            // Q: Order만들고 Book만들고 관계 테이블 만든후 => add해주고 order와 book 각각을 persist해주면
+            // CascadeType.ALL로 인해 orderItem도 생성된다
             em.flush();
             em.clear();
 
-            Parent foundParent = em.find(Parent.class, parent.getId());
-            foundParent.getChildList().remove(0);
+            Order order = new Order();
+            order.setStatus("active");
 
-            // orphanRemoval = true인 경우, 부모가 삭제되면 부모의 모든 자식들도 다 지워짐
-            // em.remove(foundParent);
+            Book book = new Book();
+            book.setName("지식 경영법");
+            book.setIsbn("12321312");
+            book.setAuthor("정약용");
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setCount(1);
+
+            order.addOrderItem(orderItem);
+            book.addOrderItem(orderItem);
+
+            System.out.println("before order persist========");
+            System.out.println(order.getId());
+            System.out.println(orderItem.getId());
+            em.persist(order);
+            System.out.println("after order persist========");
+            System.out.println(order.getId());
+            System.out.println(orderItem.getId());
+
+            em.persist(book);
 
             tx.commit();
         } catch (Exception e) {
@@ -42,5 +55,9 @@ public class Main {
             em.close();
         }
         emf.close();
+
+        System.out.println("Good Luck!");
     }
+
+
 }
