@@ -20,23 +20,22 @@ public class Main {
 
         try {
             Address address = new Address("city", "street", "10000");
-            Member member1 = new Member();
-            member1.setName("member1");
-            member1.setAddress(address);
-            em.persist(member1);
+            Member member = new Member();
+            member.setName("member");
+            member.setAddress(address);
+            em.persist(member);
 
-            Member member2 = new Member();
-            member2.setName("member2");
+            // 임베디드 타입의 side-effect 해결책2
+            // sol2 임베디트 타입은 레퍼런스 타입이므로 부작용을 원천 차단하기 위해 불변객체로 설계하자
+            // 만약, 불변객체의 속성을 바꾸고 싶다면 객체를 새롭게 만들어서(new) 사용하자
+            Address newAddress = new Address("newCity", address.getStreet(), address.getZipcode());
+            Address newAddress2 = new Address("newCity", address.getStreet(), address.getZipcode());
 
-            // 임베디드타입을 공유해서 쓰면 레퍼런스를 참조하므로 의도치않게 member2의 address도 변경된다 => call by ref
-            // 따라서, 의도하지 않았면 값을 복사해서 사용하자
-            member1.getAddress().setCity("hello!");
+            System.out.println("newAddress equals newAddress2: " + newAddress.equals(newAddress2));
 
-            // sol, member2는 복사한 copyAddress를 사용하자
-            Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
-            member2.setAddress(copyAddress);
+            member.setAddress(newAddress);
 
-            em.persist(member2);
+            em.persist(member);
 
             tx.commit();
         } catch (Exception e) {
