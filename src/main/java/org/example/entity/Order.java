@@ -1,60 +1,47 @@
 package org.example.entity;
 
+import org.example.type.Address;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "Orders")
-public class Order extends BaseEntity{
-
+@Table(name = "ORDERS")
+public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+    @Embedded
+    private Address address;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "DELIVERY_ID", unique = true)
-    private Delivery delivery;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCT_ID")
+    private Product product;
 
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItems = new ArrayList<>();
-
-    public void addOrderItem(OrderItem orderItem){
-        orderItems.add(orderItem);
-        orderItem.setOrder(this);
-    }
-
-    private String status;
+    private int orderAmount;
 
     public Long getId() {
         return id;
     }
 
-    public Member getMember() {
-        return member;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public int getOrderAmount() {
+        return orderAmount;
     }
 
-    public Delivery getDelivery() {
-        return delivery;
+    public void setOrderAmount(int orderAmount) {
+        this.orderAmount = orderAmount;
     }
 
-    public void setDelivery(Delivery delivery) {
-        this.delivery = delivery;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public Address getAddress() {
+        return address;
     }
 }
+

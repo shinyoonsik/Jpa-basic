@@ -3,8 +3,8 @@ package org.example.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "MEMBER")
-public class Member {
+@Table(name = "PRODUCT")
+public class Product {
 
     @Id
     @GeneratedValue
@@ -14,12 +14,9 @@ public class Member {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "AGE")
-    private int age;
+    private int price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TEAM_ID")
-    private Team team;
+    private int stockAmount;
 
     public Long getId() {
         return id;
@@ -33,19 +30,19 @@ public class Member {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
+    public int getPrice() {
+        return price;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
-    public Team getTeam() {
-        return team;
+    public int getStockAmount() {
+        return stockAmount;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setStockAmount(int stockAmount) {
+        this.stockAmount = stockAmount;
     }
 }
