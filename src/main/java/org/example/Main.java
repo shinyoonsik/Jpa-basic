@@ -22,20 +22,17 @@ public class Main {
             em.persist(team);
 
             Member member = new Member();
-            member.setAge(10);
-            member.setName("ys");
+            member.setAge(20);
             member.setTeam(team);
             em.persist(member);
 
-            String jpql = "select m from Member m order by m.id asc";
-            List<Member> resultList = em.createQuery(jpql, Member.class)
-                    .setFirstResult(0) // 조회 시작 위치(0부터 시작)
-                    .setMaxResults(5) // 조회할 데이터 수
-                    .getResultList();
-            for (Member foundMember : resultList) {
-                System.out.println("member: " + foundMember.getId() + " " + foundMember.getName());
-            }
+            // m.name이 null이면 '이름 없는 멤버'를 반환
+            String query = "select coalesce(m.name, '이름 없는 멤버') as memberName from Member m";
+            List<String> resultList = em.createQuery(query, String.class).getResultList();
 
+            for(String memberName : resultList){
+                System.out.println("coalesce 결과: " + memberName);
+            }
 
             tx.commit();
         } catch (Exception e) {
