@@ -44,31 +44,24 @@ public class Main {
             member3.setTeam(teamB);
             em.persist(member3);
 
-            // 영속 컨텍스트 초기화
-            em.flush();
+            System.out.println("================before flush");
+
+            // 벌크 연산
+            // JPQL이 실행되면 em.flush()자동 호출 => 위의 member들에 대한 insert가 실행되고 update쿼리 실행됨
+            int resultCount = em.createQuery("update Member m set m.age = 100")
+                            .executeUpdate();
+
+            System.out.println("================after flush");
+            System.out.println(resultCount);
+
+            Member member1 = em.find(Member.class, member.getId()); // 영속 컨텍스트에 이미 있는 member를 가지고 오기 때문에 member.getId()는 20을 호출한다
+            System.out.println(member1.getAge());
+
+            // sol => 영속 컨텍스트 초기화
             em.clear();
-
-//            String query = "select m from Member m";
-//            List<Member> resultList = em.createQuery(query, Member.class).getResultList();
-//            for(Member mem : resultList){
-//                // 지연로딩이면 mem.getTeam().getName()에서 getName()을 호출하는 시점에 Team을 조회하는 쿼리를 DB에 날림
-//                // 회원1,2,3 => SQL
-//                // 팀A => SQL 1번, 1차 캐시에서 한번
-//                // 팀B => SQL 1번
-//                // 만약 회원도 많고 팀도 다양하다면 SQL쿼리관련 IO작업이 많이 발생하여 성능하락
-//                // 분명 멤버를 조회하는 쿼리를 하나(1)만 작성했을 뿐인데 내부적으로 JPA가 지연로딩을 통해 필요할 때마다 Team을 가져옴으로써
-//                // 예상치 못한 N개의 쿼리가 발생 => N + 1문제
-//                // (N + 1문제는 지연로딩뿐만 아니라 즉시로딩에서도 발생. 어느 시점에 N개의 쿼리가 발생하느냐의 차이만 있을뿐)
-//                System.out.println("member = " + mem.getName() + ", " + mem.getTeam().getName());
-//            }
-
-            // SOL, fetch join으로 즉시로딩을 구현. 일반 join시 지연로딩이라면 사용할 때마다 join쿼리를 보내는 것이고
-            // fetch join의 경우, 즉시로딩으로 join이 발생함(한 방에 다 가져옴)
-            String solQuery = "select m from Member m join fetch m.team";
-            List<Member> solResultList = em.createQuery(solQuery, Member.class).getResultList();
-            for(Member mem : solResultList){
-                System.out.println("member = " + mem.getName() + ", " + mem.getTeam().getName());
-            }
+            System.out.println("=============영속 컨텍스트 초기화");
+            Member foundMember = em.find(Member.class, member.getId());
+            System.out.println(foundMember.getAge());
 
             tx.commit();
         } catch (Exception e) {
